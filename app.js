@@ -1,18 +1,19 @@
-let kelimeler=[];
-let secilenKelime=null;
+let kelimeler = [];
+let secilen = null;
 
 
-async function yukle(){
-
-let cevap =
-await fetch("words.json");
+async function baslat(){
 
 
-kelimeler =
-await cevap.json();
+let cevap = await fetch("words.json");
+
+
+kelimeler = await cevap.json();
+
 
 
 randomWord();
+
 
 }
 
@@ -21,40 +22,64 @@ randomWord();
 function randomWord(){
 
 
-let yeni;
-
-
-do{
-
-yeni =
-kelimeler[
+let index =
 Math.floor(
 Math.random()*kelimeler.length
-)
-];
-
-
-}
-while(
-secilenKelime &&
-yeni.word === secilenKelime.word
 );
 
 
+secilen =
+kelimeler[index];
 
-secilenKelime=yeni;
+
+goster();
+
+
+}
+
+
+
+function goster(){
+
+
+let k =
+secilen.value;
+
 
 
 document.getElementById("word").innerHTML =
-yeni.word;
+k.word;
+
+
+
+document.getElementById("level").innerHTML =
+"Seviye: "+k.level;
+
 
 
 document.getElementById("meaning").innerHTML =
-"🇹🇷 "+yeni.meaning;
+"Tür: "+k.type;
+
+
+
+let ornekler = "";
+
+
+if(k.examples){
+
+k.examples.forEach(e=>{
+
+ornekler += "💬 "+e+"<br>";
+
+});
+
+}
+
 
 
 document.getElementById("example").innerHTML =
-"💬 "+yeni.example;
+ornekler;
+
 
 
 }
@@ -64,27 +89,17 @@ document.getElementById("example").innerHTML =
 function seslendir(){
 
 
-let ses =
-new SpeechSynthesisUtterance(
-secilenKelime.word
+let audio =
+new Audio(
+secilen.value.us.mp3
 );
 
 
-ses.lang="en-US";
-
-
-speechSynthesis.speak(ses);
+audio.play();
 
 
 }
 
 
 
-if("serviceWorker" in navigator){
-
-navigator.serviceWorker.register("sw.js");
-
-}
-
-
-yukle();
+baslat();
