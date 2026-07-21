@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Vocab</title>
+<title>Vocab Trainer</title>
 
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
@@ -19,38 +19,51 @@
 
 <div class="card">
 
-<h1>📚 Vocab</h1>
+<h1>📚 Vocab Trainer</h1>
 
 
 <h2 id="word">---</h2>
+
 
 <p id="level"></p>
 
 <p id="type"></p>
 
-<p id="example"></p>
+
+<p id="phonetics"></p>
+
+
+<div id="example"></div>
 
 
 
-<button onclick="seslendir()">
-🔊 Dinle
+<button onclick="playUS()">
+🇺🇸 US Pronunciation
 </button>
 
 
-<button onclick="blockla()">
-🚫 Bu kelimeyi engelle
+<button onclick="playUK()">
+🇬🇧 UK Pronunciation
+</button>
+
+
+
+<button onclick="blockWord()">
+🚫 Block Word
 </button>
 
 
 <button onclick="randomWord()">
-➡ Yeni Kelime
+➡ New Word
 </button>
+
 
 
 <p id="stats"></p>
 
 
 </div>
+
 
 
 <script src="app.js"></script>
