@@ -1,52 +1,80 @@
-let kelimeler = [];
-let sonKelime = null;
+let kelimeler=[];
+let secilenKelime=null;
 
 
-async function kelimeleriYukle(){
+async function yukle(){
 
-    let cevap = await fetch("words.json");
+let cevap =
+await fetch("words.json");
 
-    kelimeler = await cevap.json();
+
+kelimeler =
+await cevap.json();
+
+
+randomWord();
 
 }
 
 
-async function randomWord(){
 
-    if(kelimeler.length === 0){
-        await kelimeleriYukle();
-    }
+function randomWord(){
 
 
-    let secilen;
+let yeni;
 
 
-    do {
+do{
 
-        secilen =
-        kelimeler[
-            Math.floor(Math.random()*kelimeler.length)
-        ];
-
-    } while(
-        kelimeler.length > 1 &&
-        secilen.word === sonKelime
-    );
+yeni =
+kelimeler[
+Math.floor(
+Math.random()*kelimeler.length
+)
+];
 
 
-    sonKelime = secilen.word;
+}
+while(
+secilenKelime &&
+yeni.word === secilenKelime.word
+);
 
 
-    document.getElementById("word").innerHTML =
-    secilen.word;
+
+secilenKelime=yeni;
 
 
-    document.getElementById("meaning").innerHTML =
-    secilen.meaning;
+document.getElementById("word").innerHTML =
+yeni.word;
 
 
-    document.getElementById("example").innerHTML =
-    secilen.example;
+document.getElementById("meaning").innerHTML =
+"🇹🇷 "+yeni.meaning;
+
+
+document.getElementById("example").innerHTML =
+"💬 "+yeni.example;
+
+
+}
+
+
+
+function seslendir(){
+
+
+let ses =
+new SpeechSynthesisUtterance(
+secilenKelime.word
+);
+
+
+ses.lang="en-US";
+
+
+speechSynthesis.speak(ses);
+
 
 }
 
@@ -57,3 +85,6 @@ if("serviceWorker" in navigator){
 navigator.serviceWorker.register("sw.js");
 
 }
+
+
+yukle();
