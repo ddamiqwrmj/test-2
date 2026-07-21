@@ -1,28 +1,32 @@
 {
-  "name": "Vocab - Kelime Öğrenme",
-  "short_name": "Vocab",
-  "description": "Her gün İngilizce kelime öğrenme uygulaması",
-  
-  "start_url": "./",
-  "scope": "./",
+"name":"Vocab Kelime Öğrenme",
 
-  "display": "standalone",
+"short_name":"Vocab",
 
-  "background_color": "#ffffff",
-  "theme_color": "#2563eb",
+"description":"Oxford kelimeleri ile İngilizce öğrenme",
 
-  "lang": "tr",
+"start_url":"./",
 
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+"display":"standalone",
+
+"background_color":"#ffffff",
+
+"theme_color":"#2563eb",
+
+"icons":[
+
+{
+"src":"icon-192.png",
+"sizes":"192x192",
+"type":"image/png"
+},
+
+{
+"src":"icon-512.png",
+"sizes":"512x512",
+"type":"image/png"
+}
+
+]
+
 }
