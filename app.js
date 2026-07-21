@@ -1,41 +1,114 @@
-let kelimeler = [];
-let secilen = null;
+let kelimeler=[];
+
+let secilen=null;
+
+
+let engellenenler =
+JSON.parse(
+localStorage.getItem("engellenenler")
+) || [];
+
 
 
 async function baslat(){
 
 
-let cevap = await fetch("words.json");
+let cevap =
+await fetch("words.json");
 
 
-kelimeler = await cevap.json();
+kelimeler =
+await cevap.json();
+
+
+
+filtrele();
 
 
 
 randomWord();
 
 
+
+istatistik();
+
+
 }
+
+
+
+
+function filtrele(){
+
+
+kelimeler =
+kelimeler.filter(k=>{
+
+
+return !engellenenler.includes(
+
+k.value.word.toLowerCase()
+
+);
+
+
+});
+
+
+}
+
 
 
 
 function randomWord(){
 
 
-let index =
+if(kelimeler.length===0){
+
+document.getElementById("word").innerHTML =
+"Bitti";
+
+return;
+
+}
+
+
+
+let yeni;
+
+
+
+do{
+
+
+yeni =
+kelimeler[
 Math.floor(
 Math.random()*kelimeler.length
+)
+];
+
+
+}
+while(
+
+secilen &&
+yeni.value.word ===
+secilen.value.word
+
 );
 
 
-secilen =
-kelimeler[index];
+
+secilen=yeni;
 
 
 goster();
 
 
 }
+
+
 
 
 
@@ -53,32 +126,47 @@ k.word;
 
 
 document.getElementById("level").innerHTML =
-"Seviye: "+k.level;
+"Seviye: "+(k.level || "-");
 
 
 
-document.getElementById("meaning").innerHTML =
-"Tür: "+k.type;
+document.getElementById("type").innerHTML =
+"Tür: "+(k.type || "-");
 
 
 
-let ornekler = "";
+let yazi="";
 
 
 if(k.examples){
 
-k.examples.forEach(e=>{
 
-ornekler += "💬 "+e+"<br>";
+k.examples
+.slice(0,5)
+.forEach(ornek=>{
+
+
+yazi +=
+"💬 "+ornek+"<br>";
+
 
 });
+
 
 }
 
 
 
 document.getElementById("example").innerHTML =
-ornekler;
+yazi;
+
+
+
+document.getElementById("stats").innerHTML =
+
+"Engellenen kelime: "
++
+engellenenler.length;
 
 
 
@@ -86,16 +174,91 @@ ornekler;
 
 
 
+
+
+function blockla(){
+
+
+let kelime =
+secilen.value.word.toLowerCase();
+
+
+
+if(
+!engellenenler.includes(kelime)
+){
+
+
+engellenenler.push(kelime);
+
+
+
+localStorage.setItem(
+
+"engellenenler",
+
+JSON.stringify(
+engellenenler
+)
+
+);
+
+
+}
+
+
+
+kelimeler =
+kelimeler.filter(k=>
+
+k.value.word.toLowerCase()
+!==kelime
+
+);
+
+
+
+randomWord();
+
+
+
+}
+
+
+
+
 function seslendir(){
 
 
-let audio =
+if(!secilen)
+return;
+
+
+
+let ses =
 new Audio(
 secilen.value.us.mp3
 );
 
 
-audio.play();
+
+ses.play();
+
+
+}
+
+
+
+
+
+if(
+"serviceWorker" in navigator
+){
+
+
+navigator.serviceWorker.register(
+"sw.js"
+);
 
 
 }
