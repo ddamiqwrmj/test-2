@@ -2,18 +2,26 @@
 {
 "word":"achieve",
 "meaning":"başarmak",
-"example":"I want to achieve my goal."
+"example":"I want to achieve my goals."
 },
-
 {
 "word":"improve",
 "meaning":"geliştirmek",
-"example":"I improve my English."
+"example":"I want to improve my English."
 },
-
 {
-"word":"challenge",
-"meaning":"zorluk",
-"example":"This is a challenge."
+"word":"avoid",
+"meaning":"kaçınmak",
+"example":"Avoid bad habits."
+},
+{
+"word":"increase",
+"meaning":"artırmak",
+"example":"Prices increase every year."
+},
+{
+"word":"require",
+"meaning":"gerektirmek",
+"example":"This job requires experience."
 }
 ]
