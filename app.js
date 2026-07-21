@@ -1,35 +1,55 @@
-async function randomWord(){
+let kelimeler = [];
+let sonKelime = null;
 
 
-let data =
-await fetch("words.json");
+async function kelimeleriYukle(){
 
+    let cevap = await fetch("words.json");
 
-let words =
-await data.json();
-
-
-let word =
-words[
-Math.floor(
-Math.random()*words.length
-)
-];
-
-
-document.getElementById("word").innerHTML =
-word.word;
-
-
-document.getElementById("meaning").innerHTML =
-word.meaning;
-
-
-document.getElementById("example").innerHTML =
-word.example;
-
+    kelimeler = await cevap.json();
 
 }
+
+
+async function randomWord(){
+
+    if(kelimeler.length === 0){
+        await kelimeleriYukle();
+    }
+
+
+    let secilen;
+
+
+    do {
+
+        secilen =
+        kelimeler[
+            Math.floor(Math.random()*kelimeler.length)
+        ];
+
+    } while(
+        kelimeler.length > 1 &&
+        secilen.word === sonKelime
+    );
+
+
+    sonKelime = secilen.word;
+
+
+    document.getElementById("word").innerHTML =
+    secilen.word;
+
+
+    document.getElementById("meaning").innerHTML =
+    secilen.meaning;
+
+
+    document.getElementById("example").innerHTML =
+    secilen.example;
+
+}
+
 
 
 if("serviceWorker" in navigator){
