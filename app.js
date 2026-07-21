@@ -1,36 +1,34 @@
-let kelimeler=[];
+let words = [];
 
-let secilen=null;
+let currentWord = null;
 
 
-let engellenenler =
+let blockedWords =
 JSON.parse(
-localStorage.getItem("engellenenler")
+localStorage.getItem("blockedWords")
 ) || [];
 
 
 
-async function baslat(){
+async function init(){
 
 
-let cevap =
+let response =
 await fetch("words.json");
 
 
-kelimeler =
-await cevap.json();
+words =
+await response.json();
 
 
 
-filtrele();
-
+filterBlocked();
 
 
 randomWord();
 
 
-
-istatistik();
+updateStats();
 
 
 }
@@ -38,24 +36,21 @@ istatistik();
 
 
 
-function filtrele(){
+function filterBlocked(){
 
 
-kelimeler =
-kelimeler.filter(k=>{
+words =
+words.filter(item =>
 
-
-return !engellenenler.includes(
-
-k.value.word.toLowerCase()
+!blockedWords.includes(
+item.value.word.toLowerCase()
+)
 
 );
 
 
-});
-
-
 }
+
 
 
 
@@ -63,10 +58,10 @@ k.value.word.toLowerCase()
 function randomWord(){
 
 
-if(kelimeler.length===0){
+if(words.length===0){
 
 document.getElementById("word").innerHTML =
-"Bitti";
+"No words available";
 
 return;
 
@@ -74,17 +69,16 @@ return;
 
 
 
-let yeni;
-
+let newWord;
 
 
 do{
 
 
-yeni =
-kelimeler[
+newWord =
+words[
 Math.floor(
-Math.random()*kelimeler.length
+Math.random()*words.length
 )
 ];
 
@@ -92,18 +86,18 @@ Math.random()*kelimeler.length
 }
 while(
 
-secilen &&
-yeni.value.word ===
-secilen.value.word
+currentWord &&
+newWord.value.word ===
+currentWord.value.word
 
 );
 
 
 
-secilen=yeni;
+currentWord = newWord;
 
 
-goster();
+showWord();
 
 
 }
@@ -112,42 +106,59 @@ goster();
 
 
 
-function goster(){
+function showWord(){
 
 
-let k =
-secilen.value;
+let w =
+currentWord.value;
 
 
 
 document.getElementById("word").innerHTML =
-k.word;
+w.word;
 
 
 
 document.getElementById("level").innerHTML =
-"Seviye: "+(k.level || "-");
+"Level: "+(w.level || "-");
 
 
 
 document.getElementById("type").innerHTML =
-"Tür: "+(k.type || "-");
+"Type: "+(w.type || "-");
 
 
 
-let yazi="";
+
+document.getElementById("phonetics").innerHTML =
+
+"🇺🇸 "+
+(w.phonetics?.us || "-")
++
+" &nbsp; "
++
+"🇬🇧 "
++
+(w.phonetics?.uk || "-");
 
 
-if(k.examples){
 
 
-k.examples
+
+let examples = "";
+
+
+
+if(w.examples){
+
+
+w.examples
 .slice(0,5)
-.forEach(ornek=>{
+.forEach(sentence=>{
 
 
-yazi +=
-"💬 "+ornek+"<br>";
+examples +=
+"<p>💬 "+sentence+"</p>";
 
 
 });
@@ -158,15 +169,7 @@ yazi +=
 
 
 document.getElementById("example").innerHTML =
-yazi;
-
-
-
-document.getElementById("stats").innerHTML =
-
-"Engellenen kelime: "
-+
-engellenenler.length;
+examples;
 
 
 
@@ -175,31 +178,72 @@ engellenenler.length;
 
 
 
+function playUS(){
 
-function blockla(){
+
+if(!currentWord)
+return;
 
 
-let kelime =
-secilen.value.word.toLowerCase();
+
+let audio =
+new Audio(
+currentWord.value.us.mp3
+);
+
+
+audio.play();
+
+
+}
+
+
+
+
+function playUK(){
+
+
+if(!currentWord)
+return;
+
+
+
+let audio =
+new Audio(
+currentWord.value.uk.mp3
+);
+
+
+audio.play();
+
+
+}
+
+
+
+
+function blockWord(){
+
+
+let word =
+currentWord.value.word.toLowerCase();
 
 
 
 if(
-!engellenenler.includes(kelime)
+!blockedWords.includes(word)
 ){
 
 
-engellenenler.push(kelime);
+blockedWords.push(word);
 
 
 
 localStorage.setItem(
 
-"engellenenler",
+"blockedWords",
 
-JSON.stringify(
-engellenenler
-)
+JSON.stringify(blockedWords)
 
 );
 
@@ -208,11 +252,11 @@ engellenenler
 
 
 
-kelimeler =
-kelimeler.filter(k=>
+words =
+words.filter(item =>
 
-k.value.word.toLowerCase()
-!==kelime
+item.value.word.toLowerCase()
+!== word
 
 );
 
@@ -221,33 +265,25 @@ k.value.word.toLowerCase()
 randomWord();
 
 
-
-}
-
-
-
-
-function seslendir(){
-
-
-if(!secilen)
-return;
-
-
-
-let ses =
-new Audio(
-secilen.value.us.mp3
-);
-
-
-
-ses.play();
+updateStats();
 
 
 }
 
 
+
+
+function updateStats(){
+
+
+document.getElementById("stats").innerHTML =
+
+"Blocked words: "
++
+blockedWords.length;
+
+
+}
 
 
 
@@ -255,14 +291,12 @@ if(
 "serviceWorker" in navigator
 ){
 
-
 navigator.serviceWorker.register(
 "sw.js"
 );
-
 
 }
 
 
 
-baslat();
+init();
